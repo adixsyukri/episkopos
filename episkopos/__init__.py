@@ -7,6 +7,9 @@ Created on 2016-08-19
 
 from kotti.resources import File
 from pyramid.i18n import TranslationStringFactory
+from sqlalchemy.orm import configure_mappers
+from sqlalchemy_continuum import make_versioned
+from kotti.security import Principal
 
 _ = TranslationStringFactory('episkopos')
 
@@ -22,7 +25,7 @@ def kotti_configure(settings):
     :param settings: Kotti configuration dictionary.
     :type settings: dict
     """
-
+    make_versioned(user_cls='Principal')
     settings['pyramid.includes'] += ' episkopos'
     settings['kotti.alembic_dirs'] += ' episkopos:alembic'
     settings['kotti.available_types'] += ' episkopos.resources.CustomContent'
@@ -40,5 +43,5 @@ def includeme(config):
 
     config.add_translation_dirs('episkopos:locale')
     config.add_static_view('static-episkopos', 'episkopos:static')
-
     config.scan(__name__)
+    configure_mappers()
