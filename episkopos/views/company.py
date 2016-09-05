@@ -36,12 +36,12 @@ def CompanySchema(tmpstore):
             colander.String(),
             title=_(u"Registration Number"))
 
-        logo = colander.SchemaNode(
-            FileData(),
-            title=_(u'Logo'),
-            widget=FileUploadWidget(tmpstore),
-            validator=validate_file_size_limit,
-        )
+#        logo = colander.SchemaNode(
+#            FileData(),
+#            title=_(u'Logo'),
+#            widget=FileUploadWidget(tmpstore),
+#            validator=validate_file_size_limit,
+#        )
     return CompanySchema()
     
 
