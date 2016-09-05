@@ -12,33 +12,35 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import Unicode
 from sqlalchemy import LargeBinary
+from sqlalchemy.orm import relationship
 from zope.interface import implements
 from depot.fields.sqlalchemy import UploadedFileField
-
 from episkopos import _
 
-
-class Company(Content):
+class Engagement(Content):
     """ A company content type. """
     __versioned__ = {}
-    __tablename__ = 'companies'
+    __tablename__ = 'engagements'
 
     implements(IDefaultWorkflow)
 
     id = Column(Integer, ForeignKey('contents.id'), primary_key=True)
-    registration_number = Column(Unicode(1000))
+    engagement_code = Column(Unicode(1000))
+    customer_id = Column(Integer, ForeignKey('companies.id'))
+    customer = relationship('Company',
+                primaryjoin='Engagement.customer_id==Company.id')
 
     type_info = Content.type_info.copy(
-        name=u'Company',
-        title=_(u'Company'),
-        add_view=u'add_company',
+        name=u'Engagement',
+        title=_(u'Engagement'),
+        add_view=u'add_engagement',
         addable_to=[u'Document'],
         selectable_default_views=[
 #            ("alternative-view", _(u"Alternative view")),
         ],
     )
 
-    def __init__(self, registration_number=None, **kwargs):
+    def __init__(self,  engagement_code=None, customer_id=None, **kwargs):
         """ Constructor
 
         :param custom_attribute: A very custom attribute
@@ -50,4 +52,5 @@ class Company(Content):
 
         super(Company, self).__init__(**kwargs)
 
-        self.registration_number = registration_number
+        self.engagement_code = engagement_code
+

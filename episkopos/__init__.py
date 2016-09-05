@@ -28,7 +28,9 @@ def kotti_configure(settings):
     make_versioned(user_cls='Principal')
     settings['pyramid.includes'] += ' episkopos'
     settings['kotti.alembic_dirs'] += ' episkopos:alembic'
-    settings['kotti.available_types'] += ' episkopos.resources.Company'
+    for t in ['episkopos.resources.Company',
+                'episkopos.resources.Engagement']:
+        settings['kotti.available_types'] += (' ' + t)
     settings['kotti.fanstatic.view_needed'] += ' episkopos.fanstatic.css_and_js'
     File.type_info.addable_to.append('Company')
 

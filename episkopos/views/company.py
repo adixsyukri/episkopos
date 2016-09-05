@@ -59,7 +59,7 @@ class CompanyAddForm(AddFormView):
 
 
     def add(self, **appstruct):
-        appstruct['logo'] = _to_fieldstorage(**appstruct['logo'])
+#        appstruct['logo'] = _to_fieldstorage(**appstruct['logo'])
         return Company(**appstruct)
 
 
@@ -72,18 +72,18 @@ class CompanyEditForm(EditFormView):
         tmpstore = FileUploadTempStore(self.request)
         return CompanySchema(tmpstore)
 
-    def before(self, form):
-        form.appstruct = get_appstruct(self.context, self.schema)
-        if self.context.logo is not None:
-            form.appstruct['logo'] = {
-                'uid': str(random.randint(1000000000, 9999999999)),
-                'filename' : form.appstruct['logo']['filename'],
-                'mimetype': form.appstruct['logo']['content_type'],
-                'fp': StringIO(self.context.logo.file.read())
-            }
-
+#    def before(self, form):
+#        form.appstruct = get_appstruct(self.context, self.schema)
+#        if self.context.logo is not None:
+#            form.appstruct['logo'] = {
+#                'uid': str(random.randint(1000000000, 9999999999)),
+#                'filename' : form.appstruct['logo']['filename'],
+#                'mimetype': form.appstruct['logo']['content_type'],
+#                'fp': StringIO(self.context.logo.file.read())
+#            }
+#
     def edit(self, **appstruct):
-        appstruct['logo'] = _to_fieldstorage(**appstruct['logo'])
+#        appstruct['logo'] = _to_fieldstorage(**appstruct['logo'])
         return super(CompanyEditForm, self).edit(**appstruct)
 
 
@@ -92,7 +92,7 @@ class CompanyViews(BaseView):
     """ Views for :class:`episkopos.resources.Company` """
 
     @view_config(name='view', permission='view',
-                 renderer='episkopos:templates/custom-content-default.pt')
+                 renderer='episkopos:templates/company.pt')
     def default_view(self):
         """ Default view for :class:`episkopos.resources.Company`
 
@@ -103,21 +103,3 @@ class CompanyViews(BaseView):
         return {
             'foo': _(u'bar'),
         }
-
-    @view_config(name='alternative-view', permission='view',
-                 renderer='episkopos:templates/custom-content-alternative.pt')
-    def alternative_view(self):
-        """ Alternative view for :class:`episkopos.resources.Company`.
-        This view requires the JS / CSS resources defined in
-        :mod:`episkopos.fanstatic`.
-
-        :result: Dictionary needed to render the template.
-        :rtype: dict
-        """
-
-        css_and_js.need()
-
-        return {
-            'foo': _(u'bar'),
-        }
-
