@@ -11,9 +11,9 @@ from pytest import fixture
 @fixture
 def dummy_content(root):
 
-    from episkopos.resources import CustomContent
+    from episkopos.resources import Company
 
-    root['cc'] = cc = CustomContent(
+    root['cc'] = cc = Company(
         title=u'My content',
         description=u'My very custom content is custom',
         custom_attribute='Lorem ipsum'
@@ -24,9 +24,9 @@ def dummy_content(root):
 
 def test_view(dummy_content, dummy_request):
 
-    from episkopos.views.view import CustomContentViews
+    from episkopos.views.view import CompanyViews
 
-    views = CustomContentViews(dummy_content, dummy_request)
+    views = CompanyViews(dummy_content, dummy_request)
 
     default = views.default_view()
     assert 'foo' in default
