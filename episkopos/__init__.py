@@ -48,5 +48,6 @@ def includeme(config):
 
     config.add_translation_dirs('episkopos:locale')
     config.add_static_view('static-episkopos', 'episkopos:static')
+    config.add_google_oauth2_login_from_settings(prefix='velruse.google_oauth2.')
     config.scan(__name__)
     configure_mappers()

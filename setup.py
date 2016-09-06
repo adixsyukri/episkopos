@@ -18,6 +18,7 @@ version = '0.1dev'
 install_requires = [
     'Kotti>=1.0.0',
     'kotti_tinymce',
+    'velruse',
     'sqlalchemy_continuum',
     'beaker',
 ]
