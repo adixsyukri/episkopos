@@ -51,6 +51,8 @@ def set_username(context, request):
         get_principals()[login] = appstruct
         return login_success_callback(request, 
                 get_principals()[login], came_from)
+    elif login and get_principals().search(name=login).first():
+        request.session.flash(_(u"Username already taken."), 'error')
     return {'url': request.url, 'came_from': came_from}
 
 @view_config(name='login')
