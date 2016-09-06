@@ -12,37 +12,41 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import Unicode
 from sqlalchemy import LargeBinary
+from sqlalchemy import DateTime
+from sqlalchemy import Boolean
+from sqlalchemy import UnicodeText
 from sqlalchemy.orm import relationship
 from zope.interface import implements
 from depot.fields.sqlalchemy import UploadedFileField
 from episkopos import _
 from uuid import uuid4
 
-class Engagement(Content):
-    """ A company content type. """
-    __versioned__ = {}
-    __tablename__ = 'engagements'
+class Activity(Content):
+    __tablename__ = 'activities'
 
     implements(IDefaultWorkflow)
 
     id = Column(Integer, ForeignKey('contents.id'), primary_key=True)
-    engagement_code = Column(Unicode(1000))
-    customer_id = Column(Integer, ForeignKey('companies.id'))
-    customer = relationship('Company',
-                primaryjoin='Engagement.customer_id==Company.id')
-
+    engagement_id = Column(Integer, ForeignKey('engagements.id'))
+    engagement = relationship('Engagement',
+                primaryjoin='Activity.engagement_id==Engagement.id')
+    start_dt = Column(DateTime(timezone=True))
+    end_dt = Column(DateTime(timezone=True))
+    issues = Column(UnicodeText())
+    in_navigation = Column(Boolean, default=False)
     uuid = Column(Unicode(50))
     type_info = Content.type_info.copy(
-        name=u'Engagement',
-        title=_(u'Engagement'),
-        add_view=u'add_engagement',
+        name=u'Activity',
+        title=_(u'Activity'),
+        add_view=u'add_activity',
         addable_to=[u'Document'],
         selectable_default_views=[
 #            ("alternative-view", _(u"Alternative view")),
         ],
     )
 
-    def __init__(self,  engagement_code=None, customer_id=None, uuid=None, **kwargs):
+    def __init__(self,  engagement_id=None, start_dt=None, end_dt=None, 
+                uuid=None, **kwargs):
         """ Constructor
 
         :param custom_attribute: A very custom attribute
@@ -52,9 +56,16 @@ class Engagement(Content):
         :type **kwargs: see :class:`kotti.resources.Content`
         """
 
-        super(Engagement, self).__init__(**kwargs)
-
-        self.engagement_code = engagement_code
-        self.customer_id = customer_id
+        super(Activity, self).__init__(**kwargs)
         self.uuid = uuid or str(uuid4())
-        
+        self.engagement_id = engagement_id
+
+
+    @property
+    def in_navigation(self):
+        return False
+
+    @in_navigation.setter
+    def in_navigation(self, value):
+        pass
+

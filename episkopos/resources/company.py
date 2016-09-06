@@ -16,7 +16,7 @@ from zope.interface import implements
 from depot.fields.sqlalchemy import UploadedFileField
 
 from episkopos import _
-
+from uuid import uuid4
 
 class Company(Content):
     """ A company content type. """
@@ -26,8 +26,8 @@ class Company(Content):
     implements(IDefaultWorkflow)
 
     id = Column(Integer, ForeignKey('contents.id'), primary_key=True)
-    registration_number = Column(Unicode(1000))
-
+    registration_number = Column(Unicode(100))
+    uuid = Column(Unicode(50))
     type_info = Content.type_info.copy(
         name=u'Company',
         title=_(u'Company'),
@@ -38,7 +38,7 @@ class Company(Content):
         ],
     )
 
-    def __init__(self, registration_number=None, **kwargs):
+    def __init__(self, registration_number=None, uuid=None, **kwargs):
         """ Constructor
 
         :param custom_attribute: A very custom attribute
@@ -51,3 +51,4 @@ class Company(Content):
         super(Company, self).__init__(**kwargs)
 
         self.registration_number = registration_number
+        self.uuid = uuid or str(uuid4())

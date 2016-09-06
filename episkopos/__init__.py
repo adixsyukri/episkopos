@@ -10,9 +10,11 @@ from pyramid.i18n import TranslationStringFactory
 from sqlalchemy.orm import configure_mappers
 from sqlalchemy_continuum import make_versioned
 from kotti.security import Principal
+from deform.widget import DateTimeInputWidget
 
 _ = TranslationStringFactory('episkopos')
 
+DateTimeInputWidget.template = 'episkopos:templates/datetimeinput.pt'
 
 def kotti_configure(settings):
     """ Add a line like this to you .ini file::
@@ -29,7 +31,8 @@ def kotti_configure(settings):
     settings['pyramid.includes'] += ' episkopos'
     settings['kotti.alembic_dirs'] += ' episkopos:alembic'
     for t in ['episkopos.resources.Company',
-                'episkopos.resources.Engagement']:
+              'episkopos.resources.Engagement',
+              'episkopos.resources.Activity']:
         settings['kotti.available_types'] += (' ' + t)
     settings['kotti.fanstatic.view_needed'] += ' episkopos.fanstatic.css_and_js'
     File.type_info.addable_to.append('Company')

@@ -24,6 +24,7 @@ from kotti.views.form import FileUploadTempStore
 from kotti.views.form import get_appstruct
 from kotti.views.form import validate_file_size_limit
 from kotti.util import _to_fieldstorage
+from episkopos.views.form import deferred_company_select_widget
 
 from StringIO import StringIO
 import random
@@ -38,14 +39,9 @@ def EngagementSchema(tmpstore):
 
         customer_id = colander.SchemaNode(
             colander.Integer(),
-            title=_(u'Customer')
+            title=_(u'Customer'),
+            widget=deferred_company_select_widget
         )
-#        logo = colander.SchemaNode(
-#            FileData(),
-#            title=_(u'Logo'),
-#            widget=FileUploadWidget(tmpstore),
-#            validator=validate_file_size_limit,
-#        )
     return EngagementSchema()
     
 
