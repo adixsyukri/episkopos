@@ -48,6 +48,9 @@ def set_username(context, request):
             'confirm_token': None,
             'groups': None
         }
+        # FIXME: make this generic
+        if appstruct['email'].lower().endswith('@abyres.net'):
+            appstruct['groups'] = ['role:staff']
         get_principals()[login] = appstruct
         return login_success_callback(request, 
                 get_principals()[login], came_from)
