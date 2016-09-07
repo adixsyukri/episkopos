@@ -183,6 +183,7 @@ class GlobalViews(BaseView):
                          'label': _(u'Engagement'), 
                          'structure': False}],
             'data': [{
+                'url': self.request.resource_url(i),
                 'start_dt': get_date(i.start_dt),
                 'end_dt': get_date(i.end_dt),
                 'owner': i.owner,

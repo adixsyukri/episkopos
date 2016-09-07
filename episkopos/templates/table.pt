@@ -11,6 +11,7 @@
             <div class="col-md-12">
                <table class="table table-condensed">
                   <thead>
+                     <th></th>
                      <tal:r repeat="header headers">
                         <th tal:content="header['label']"></th>
                      </tal:r>
@@ -18,6 +19,9 @@
                   <tbody>
                      <tal:r repeat="datum data">
                         <tr>
+                           <td>
+                              <a href="${datum['url']}">#</a>
+                           </td>
                            <tal:r repeat="col headers">
                               <td tal:condition="not col['structure']"
                                  tal:content="datum[col['key']]"></td>
