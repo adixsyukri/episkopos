@@ -38,6 +38,7 @@ from episkopos.views.form import deferred_engagement_select_widget
 
 from pytz import timezone
 from StringIO import StringIO
+from iso8601.iso8601 import FixedOffset
 import random
 from uuid import uuid4
 from kotti import DBSession
@@ -53,7 +54,7 @@ def ActivitySchema(tmpstore):
             widget=deferred_engagement_select_widget)
 
         start_dt = colander.SchemaNode(
-            colander.DateTime(default_tzinfo=timezone('Asia/Kuala_Lumpur')),
+            colander.DateTime(default_tzinfo=FixedOffset(8, 0, 'Asia/Kuala_Lumpur')),
             title=_(u'Start'),
             widget=DateTimeInputWidget(
                 time_options=(('format', 'h:i A'), ('interval', 60))
@@ -61,7 +62,7 @@ def ActivitySchema(tmpstore):
             default=deferred_default_dt
         )
         end_dt = colander.SchemaNode(
-            colander.DateTime(default_tzinfo=timezone('Asia/Kuala_Lumpur')),
+            colander.DateTime(default_tzinfo=FixedOffset(8, 0, 'Asia/Kuala_Lumpur')),
             title=_(u'End'),
             widget=DateTimeInputWidget(
                 time_options=(('format', 'h:i A'), ('interval', 60))
@@ -117,6 +118,8 @@ class ActivityAddForm(AddFormView):
         return appstruct['uuid']
 
     def save_success(self, appstruct):
+        appstruct['start_dt'] = appstruct['start_dt'].replace(minute=0)
+        appstruct['end_dt'] = appstruct['end_dt'].replace(minute=0)
         result = super(ActivityAddForm, self).save_success(appstruct)
         name = appstruct['uuid']
         new_item = get_root()[name] = self.context[name]
@@ -134,6 +137,8 @@ class ActivityEditForm(EditFormView):
         return ActivitySchema(tmpstore)
 
     def edit(self, **appstruct):
+        appstruct['start_dt'] = appstruct['start_dt'].replace(minute=0)
+        appstruct['end_dt'] = appstruct['end_dt'].replace(minute=0)
         return super(ActivityEditForm, self).edit(**appstruct)
 
 

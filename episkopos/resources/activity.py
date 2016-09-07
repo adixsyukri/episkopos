@@ -13,6 +13,7 @@ from sqlalchemy import Integer
 from sqlalchemy import Unicode
 from sqlalchemy import LargeBinary
 from sqlalchemy import DateTime
+from episkopos.utcdatetime import UTCDateTime
 from sqlalchemy import Boolean
 from sqlalchemy import UnicodeText
 from sqlalchemy.orm import relationship
@@ -30,8 +31,8 @@ class Activity(Content):
     engagement_id = Column(Integer, ForeignKey('engagements.id'))
     engagement = relationship('Engagement',
                 primaryjoin='Activity.engagement_id==Engagement.id')
-    start_dt = Column(DateTime(timezone=True))
-    end_dt = Column(DateTime(timezone=True))
+    start_dt = Column(UTCDateTime())
+    end_dt = Column(UTCDateTime())
     summary = Column(UnicodeText())
     issues = Column(UnicodeText())
     in_navigation = Column(Boolean, default=False)
