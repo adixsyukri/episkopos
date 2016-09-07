@@ -24,6 +24,10 @@ kotti.populators =
     episkopos.populator
 kotti.use_workflow = 0
 
+kotti.depot.0.name = localfs
+kotti.depot.0.backend = depot.io.local.LocalFileStorage
+kotti.depot.0.storage_path = {{ install_path }}/filedepot/
+
 realm={{ realm }}
 store = memory
 endpoint = %(realm)s/logged_in
