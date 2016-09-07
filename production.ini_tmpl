@@ -1,10 +1,10 @@
 [app:episkopos]
 use = egg:kotti
 
-pyramid.reload_templates = true
-pyramid.debug_templates = true
+pyramid.reload_templates = false
+pyramid.debug_templates = false
 pyramid.debug_authorization = false
-pyramid.debug_notfound = true
+pyramid.debug_notfound = false
 pyramid.debug_routematch = false
 pyramid.includes =
     pyramid_tm
