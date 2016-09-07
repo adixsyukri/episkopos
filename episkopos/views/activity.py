@@ -40,6 +40,8 @@ from pytz import timezone
 from StringIO import StringIO
 import random
 from uuid import uuid4
+from kotti import DBSession
+from deform.widget import RichTextWidget
 
 def ActivitySchema(tmpstore):
     class ActivitySchema(colander.MappingSchema):
@@ -67,17 +69,17 @@ def ActivitySchema(tmpstore):
             default=deferred_default_dt
         )
 
-        description = colander.SchemaNode(
+        summary = colander.SchemaNode(
             colander.String(),
             title=_('Activity Summary'),
-            widget=TextAreaWidget(cols=40, rows=5),
+            widget=RichTextWidget(),
             missing=u"",
         )
 
         issues = colander.SchemaNode(
             colander.String(),
             title=_('Issues Faced'),
-            widget=TextAreaWidget(cols=40, rows=5),
+            widget=RichTextWidget(),
             missing=u"",
         )
     
@@ -118,7 +120,7 @@ class ActivityAddForm(AddFormView):
         result = super(ActivityAddForm, self).save_success(appstruct)
         name = appstruct['uuid']
         new_item = get_root()[name] = self.context[name]
-        location = self.success_url or self.request.resource_url(new_item)
+        location = self.request.application_url + '/activities'
         return HTTPFound(location=location)
 
 
@@ -151,3 +153,40 @@ class ActivityViews(BaseView):
         return {
             'foo': _(u'bar'),
         }
+
+
+class GlobalViews(BaseView):
+    @view_config(name='activities', permission='view',
+            renderer='episkopos:templates/table.pt')
+    def activities(self):
+        def get_date(d):
+            return d.strftime('%Y-%m-%d %H:%M') if d else ''
+            
+        return {
+                'headers': [
+                        {'key': 'owner', 
+                         'label': _(u'Owner'), 
+                         'structure': False},
+                        {'key': 'start_dt', 
+                         'label': _(u'Start Date'), 
+                         'structure': False},
+                        {'key': 'end_dt', 
+                         'label': _(u'End Date'), 
+                         'structure': False},
+                        {'key': 'summary', 
+                         'label': _(u'Summary'), 
+                         'structure': True},
+                        {'key': 'issues', 
+                         'label': _(u'Issues'), 
+                         'structure': True},
+                        {'key': 'engagement', 
+                         'label': _(u'Engagement'), 
+                         'structure': False}],
+            'data': [{
+                'start_dt': get_date(i.start_dt),
+                'end_dt': get_date(i.end_dt),
+                'owner': i.owner,
+                'summary': i.summary,
+                'issues': i.issues,
+                'engagement': i.engagement.title
+            } for i in DBSession.query(Activity).all()]}

@@ -32,6 +32,7 @@ class Activity(Content):
                 primaryjoin='Activity.engagement_id==Engagement.id')
     start_dt = Column(DateTime(timezone=True))
     end_dt = Column(DateTime(timezone=True))
+    summary = Column(UnicodeText())
     issues = Column(UnicodeText())
     in_navigation = Column(Boolean, default=False)
     uuid = Column(Unicode(50))
@@ -47,7 +48,7 @@ class Activity(Content):
     )
 
     def __init__(self,  engagement_id=None, start_dt=None, end_dt=None, 
-                uuid=None, **kwargs):
+                uuid=None, issues=None, **kwargs):
         """ Constructor
 
         :param custom_attribute: A very custom attribute
@@ -60,7 +61,9 @@ class Activity(Content):
         super(Activity, self).__init__(**kwargs)
         self.uuid = uuid or str(uuid4())
         self.engagement_id = engagement_id
-
+        self.start_dt = start_dt
+        self.end_dt = end_dt
+        self.issues = issues
 
     @property
     def in_navigation(self):
