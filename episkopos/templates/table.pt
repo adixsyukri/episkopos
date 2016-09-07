@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="api.macro('kotti:templates/view/master.pt')">
+
+      <div class="content" metal:fill-slot="content" i18n:domain="episkopos">
+         <div class="row">
+            <div class="col-md-12">
+               <table class="table table-condensed">
+                  <thead>
+                     <tal:r repeat="header headers">
+                        <th tal:content="header['label']"></th>
+                     </tal:r>
+                  </thead>
+                  <tbody>
+                     <tal:r repeat="datum data">
+                        <tr>
+                           <tal:r repeat="col headers">
+                              <td tal:condition="not col['structure']"
+                                 tal:content="datum[col['key']]"></td>
+                              <td tal:condition="col['structure']"
+                                 tal:content="structure datum[col['key']]"></td>
+                           </tal:r>
+                        </tr>
+                     </tal:r>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+</html>
+
