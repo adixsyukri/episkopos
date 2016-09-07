@@ -33,6 +33,7 @@ class Company(Content):
         title=_(u'Company'),
         add_view=u'add_company',
         addable_to=[u'Document'],
+        add_permission='episkopos.add_company',
         selectable_default_views=[
 #            ("alternative-view", _(u"Alternative view")),
         ],
@@ -52,3 +53,12 @@ class Company(Content):
 
         self.registration_number = registration_number
         self.uuid = uuid or str(uuid4())
+
+    @property
+    def in_navigation(self):
+        return False
+
+    @in_navigation.setter
+    def in_navigation(self, value):
+        pass
+

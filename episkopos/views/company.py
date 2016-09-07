@@ -14,6 +14,7 @@ from deform.widget import FileUploadWidget
 
 from pyramid.view import view_config
 from pyramid.view import view_defaults
+from pyramid.httpexceptions import HTTPFound
 
 from episkopos import _
 from episkopos.resources import Company
@@ -23,10 +24,12 @@ from episkopos.views import BaseView
 from kotti.views.form import FileUploadTempStore
 from kotti.views.form import get_appstruct
 from kotti.views.form import validate_file_size_limit
+from kotti.resources import get_root
 from kotti.util import _to_fieldstorage
 
 from StringIO import StringIO
 import random
+from uuid import uuid4
 
 def CompanySchema(tmpstore):
     class CompanySchema(ContentSchema):
@@ -56,7 +59,16 @@ class CompanyAddForm(AddFormView):
         tmpstore = FileUploadTempStore(self.request)
         return CompanySchema(tmpstore)
 
+    def find_name(self, appstruct):
+        appstruct.setdefault('uuid', str(uuid4()))
+        return appstruct['uuid']
 
+    def save_success(self, appstruct):
+        result = super(CompanyAddForm, self).save_success(appstruct)
+        name = appstruct['uuid']
+        new_item = get_root()[name] = self.context[name]
+        location = self.success_url or self.request.resource_url(new_item)
+        return HTTPFound(location=location)
 
     def add(self, **appstruct):
 #        appstruct['logo'] = _to_fieldstorage(**appstruct['logo'])

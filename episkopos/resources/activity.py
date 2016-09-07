@@ -40,6 +40,7 @@ class Activity(Content):
         title=_(u'Activity'),
         add_view=u'add_activity',
         addable_to=[u'Document'],
+        add_permission='episkopos.add_activity',
         selectable_default_views=[
 #            ("alternative-view", _(u"Alternative view")),
         ],

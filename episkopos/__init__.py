@@ -10,7 +10,11 @@ from pyramid.i18n import TranslationStringFactory
 from sqlalchemy.orm import configure_mappers
 from sqlalchemy_continuum import make_versioned
 from kotti.security import Principal
+import episkopos.security
+from episkopos.security import SITE_ACL
 from deform.widget import DateTimeInputWidget
+from kotti.resources import get_root
+
 
 _ = TranslationStringFactory('episkopos')
 
@@ -35,8 +39,6 @@ def kotti_configure(settings):
               'episkopos.resources.Activity']:
         settings['kotti.available_types'] += (' ' + t)
     settings['kotti.fanstatic.view_needed'] += ' episkopos.fanstatic.css_and_js'
-    File.type_info.addable_to.append('Company')
-
 
 def includeme(config):
     """ Don't add this to your ``pyramid_includes``, but add the
@@ -51,3 +53,8 @@ def includeme(config):
     config.add_google_oauth2_login_from_settings(prefix='velruse.google_oauth2.')
     config.scan(__name__)
     configure_mappers()
+
+
+def populator():
+    site = get_root()
+    site.__acl__ = SITE_ACL

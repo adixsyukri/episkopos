@@ -37,6 +37,7 @@ class Engagement(Content):
         title=_(u'Engagement'),
         add_view=u'add_engagement',
         addable_to=[u'Document'],
+        add_permission='episkopos.add_engagement',
         selectable_default_views=[
 #            ("alternative-view", _(u"Alternative view")),
         ],
@@ -58,3 +59,11 @@ class Engagement(Content):
         self.customer_id = customer_id
         self.uuid = uuid or str(uuid4())
         
+    @property
+    def in_navigation(self):
+        return False
+
+    @in_navigation.setter
+    def in_navigation(self, value):
+        pass
+

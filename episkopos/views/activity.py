@@ -18,6 +18,7 @@ from deform.widget import HiddenWidget
 
 from pyramid.view import view_config
 from pyramid.view import view_defaults
+from pyramid.httpexceptions import HTTPFound
 
 from episkopos import _
 from episkopos.resources import Activity
@@ -27,6 +28,7 @@ from episkopos.views import BaseView
 from episkopos.views.form import deferred_default_uuid
 from episkopos.views.form import deferred_default_dt
 
+from kotti.resources import get_root
 from kotti.views.form import FileUploadTempStore
 from kotti.views.form import get_appstruct
 from kotti.views.form import validate_file_size_limit
@@ -109,9 +111,15 @@ class ActivityAddForm(AddFormView):
         return Activity(**appstruct)
 
     def find_name(self, appstruct):
-        uuid = str(uuid4())
-        appstruct['uuid'] = uuid
-        return uuid
+        appstruct.setdefault('uuid', str(uuid4()))
+        return appstruct['uuid']
+
+    def save_success(self, appstruct):
+        result = super(ActivityAddForm, self).save_success(appstruct)
+        name = appstruct['uuid']
+        new_item = get_root()[name] = self.context[name]
+        location = self.success_url or self.request.resource_url(new_item)
+        return HTTPFound(location=location)
 
 
 @view_config(name='edit', context=Activity, permission='edit',
