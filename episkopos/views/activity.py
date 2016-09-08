@@ -43,6 +43,7 @@ import random
 from uuid import uuid4
 from kotti import DBSession
 from deform.widget import RichTextWidget
+from sqlalchemy import desc
 
 def ActivitySchema(tmpstore):
     class ActivitySchema(colander.MappingSchema):
@@ -195,4 +196,6 @@ class GlobalViews(BaseView):
                 'summary': i.summary,
                 'issues': i.issues,
                 'engagement': i.engagement.title
-            } for i in DBSession.query(Activity).all()]}
+            } for i in DBSession.query(
+                Activity).all().order_by(desc(Activity.creation_date)
+                ).limit(15)]}
