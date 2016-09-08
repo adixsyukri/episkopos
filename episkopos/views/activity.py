@@ -197,5 +197,5 @@ class GlobalViews(BaseView):
                 'issues': i.issues,
                 'engagement': i.engagement.title
             } for i in DBSession.query(
-                Activity).all().order_by(desc(Activity.creation_date)
-                ).limit(15)]}
+                Activity).order_by(desc(Activity.creation_date)
+                ).limit(15).all()]}
