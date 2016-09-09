@@ -37,7 +37,8 @@ def login_complete_view(request):
 def set_username(context, request):
     came_from = request.params.get('came_from', request.resource_url(context))
     login = (request.params.get('login') or '').strip()
-    if login and not get_principals().search(name=login).first():
+    fullname = (request.params.get('fullname') or '').strip()
+    if (fullname and login) and not get_principals().search(name=login).first():
         cred = request.session.pop('velruse.credentials')
         appstruct = {
             'name': login,
@@ -56,7 +57,17 @@ def set_username(context, request):
                 get_principals()[login], came_from)
     elif login and get_principals().search(name=login).first():
         request.session.flash(_(u"Username already taken."), 'error')
-    return {'url': request.url, 'came_from': came_from}
+    cred = request.session.get('velruse.credentials', None)
+    if not fullname:
+        fullname = (request.params.get('fullname') or 
+                (cred['profile']['displayName'] if cred else '') or 
+                (cred['profile']['verifiedEmail']
+                    .split('@')[0].capitalize() if cred else ''))
+    if not login:
+        login = (cred['profile']['verifiedEmail'].split('@')[0] if cred else '')
+    return {'url': request.url, 'came_from': came_from,
+            'login': login,
+            'fullname': fullname}
 
 @view_config(name='login')
 def login(context, request):
