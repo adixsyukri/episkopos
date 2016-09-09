@@ -43,7 +43,7 @@ def set_username(context, request):
         appstruct = {
             'name': login,
             'password': uuid4().hex,
-            'title': cred['profile']['displayName'],
+            'title': fullname,
             'email': cred['profile']['verifiedEmail'],
             'active': True,
             'confirm_token': None,
