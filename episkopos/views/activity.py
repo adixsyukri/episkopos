@@ -44,6 +44,9 @@ from uuid import uuid4
 from kotti import DBSession
 from deform.widget import RichTextWidget
 from sqlalchemy import desc
+from sqlalchemy import func
+
+import math
 
 def ActivitySchema(tmpstore):
     class ActivitySchema(colander.MappingSchema):
@@ -165,9 +168,31 @@ class GlobalViews(BaseView):
     @view_config(name='activities', permission='view',
             renderer='episkopos:templates/table.pt')
     def activities(self):
+        row_size_per_page = 15
+        cur_page = 1
+        total_rows = DBSession.query(func.count(Activity.id)).scalar()
+        total_page_num = int(math.ceil(float(total_rows) / float(row_size_per_page)))
+        location = '/activities'
+        param = 'page'
+        
+        if self.request.params.keys():
+            cur_page = int(self.request.params.values()[0])
+
         def get_date(d):
             return d.strftime('%Y-%m-%d %H:%M') if d else ''
-            
+         
+        def pagination_data():
+            end = total_page_num + 1
+            data = []
+
+            for x in range(1,end):
+                data.append({
+                    'val':x,
+                    'url': '%s?%s=%d' % (location,param,x)
+                })
+
+            return data
+
         return {
                 'headers': [
                         {'key': 'owner', 
@@ -188,14 +213,22 @@ class GlobalViews(BaseView):
                         {'key': 'engagement', 
                          'label': _(u'Engagement'), 
                          'structure': False}],
-            'data': [{
-                'url': self.request.resource_url(i),
-                'start_dt': get_date(i.start_dt),
-                'end_dt': get_date(i.end_dt),
-                'owner': i.owner,
-                'summary': i.summary,
-                'issues': i.issues,
-                'engagement': i.engagement.title
-            } for i in DBSession.query(
-                Activity).order_by(desc(Activity.creation_date)
-                ).limit(15).all()]}
+                'data': [{
+                    'url': self.request.resource_url(i),
+                    'start_dt': get_date(i.start_dt),
+                    'end_dt': get_date(i.end_dt),
+                    'owner': i.owner,
+                    'summary': i.summary,
+                    'issues': i.issues,
+                    'engagement': i.engagement.title
+                } for i in DBSession.query(
+                    Activity).order_by(desc(Activity.start_dt)
+                    ).slice(row_size_per_page * (cur_page-1),row_size_per_page * (cur_page)).all()],
+                'pagination': pagination_data(),
+                'navigation': {
+                    'cur_page':cur_page,
+                    'total_page': total_page_num,
+                    'prev': '%s?%s=%d' % (location,param,cur_page-1),
+                    'next': '%s?%s=%d' % (location,param,cur_page+1)
+                    }
+            }
