@@ -8,6 +8,13 @@
 
       <div class="content" metal:fill-slot="content" i18n:domain="episkopos">
          <div class="row">
+             <div class="col-md-offset-10 col-md-2">
+                 <a class="btn btn-default pull-right" href="/calendar">
+                     <i class="glyphicon glyphicon-calendar"></i> calendar view
+                 </a>
+             </div>
+         </div>
+         <div class="row">
             <div class="col-md-12">
                <table class="table table-condensed">
                   <thead>
@@ -32,6 +39,24 @@
                      </tal:r>
                   </tbody>
                </table>
+               <nav aria-label="Page navigation pull-right">
+                 <ul class="pagination">
+                   <li tal:condition="navigation['cur_page'] != 1">
+                       <a href="${navigation['prev']}" aria-label="Previous">
+                       <span aria-hidden="true">&laquo;</span>
+                     </a>
+                   </li>
+                   <tal:r repeat="page pagination">
+                    <li class="active" tal:condition="navigation['cur_page'] == page['val']"><a href="${page['url']}"><tal:r replace="page['val']"></a></li>
+                    <li tal:condition="navigation['cur_page'] != page['val']"><a href="${page['url']}"><tal:r replace="page['val']"></a></li>
+                   </tal:r>
+                   <li tal:condition="navigation['cur_page'] != navigation['total_page']">
+                       <a href="${navigation['next']}" aria-label="Next">
+                       <span aria-hidden="true">&raquo;</span>
+                     </a>
+                   </li>
+                 </ul>
+               </nav>
             </div>
          </div>
       </div>

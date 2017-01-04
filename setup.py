@@ -21,6 +21,7 @@ install_requires = [
     'velruse',
     'sqlalchemy_continuum',
     'beaker',
+    'js.fullcalendar>=2.9.1',
 ]
 
 
