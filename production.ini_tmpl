@@ -23,6 +23,7 @@ kotti.populators =
     kotti.populate.populate
     episkopos.populator
 kotti.use_workflow = 0
+kotti.max_file_size = {{ max_file_size_mb }}
 
 kotti.depot.0.name = localfs
 kotti.depot.0.backend = depot.io.local.LocalFileStorage

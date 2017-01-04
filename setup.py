@@ -22,6 +22,8 @@ install_requires = [
     'sqlalchemy_continuum',
     'beaker',
     'js.fullcalendar>=2.9.1',
+    'python-dateutil',
+    'mysql-python',
 ]
 
 
