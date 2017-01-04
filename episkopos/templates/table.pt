@@ -8,6 +8,13 @@
 
       <div class="content" metal:fill-slot="content" i18n:domain="episkopos">
          <div class="row">
+             <div class="col-md-offset-10 col-md-2">
+                 <a class="btn btn-default pull-right" href="/calendar">
+                     <i class="glyphicon glyphicon-calendar"></i> calendar view
+                 </a>
+             </div>
+         </div>
+         <div class="row">
             <div class="col-md-12">
                <table class="table table-condensed">
                   <thead>

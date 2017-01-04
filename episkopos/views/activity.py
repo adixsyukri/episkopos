@@ -48,6 +48,8 @@ from sqlalchemy import func
 
 import math
 
+from js.fullcalendar import fullcalendar
+
 def ActivitySchema(tmpstore):
     class ActivitySchema(colander.MappingSchema):
         """ Schema for CustomContent. """
@@ -232,3 +234,26 @@ class GlobalViews(BaseView):
                     'next': '%s?%s=%d' % (location,param,cur_page+1)
                     }
             }
+
+    @view_config(name='calendar', permission='view',
+            renderer='episkopos:templates/calendar.pt')
+    def calendar(self):
+        fullcalendar.need()
+        return {
+                'foo': _(u'bar'),
+                }
+
+    @view_config(name='calendar_json', permission='view',
+            renderer='json')
+    def calendar_json(self):
+
+        def get_date(d):
+            return d.strftime('%Y-%m-%d %H:%M') if d else ''
+
+        return [{
+                'url': self.request.resource_url(i),
+                'start': get_date(i.start_dt),
+                'end': get_date(i.end_dt),
+                'title': i.owner
+                } for i in DBSession.query(Activity)
+               ]

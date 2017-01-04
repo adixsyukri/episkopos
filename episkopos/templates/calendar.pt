@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="api.macro('kotti:templates/view/master.pt')">
+
+  <div metal:fill-slot="content"
+           i18n:domain="episkopos">
+    <div class="row">
+        <div class="col-md-offset-10 col-md-2">
+            <a class="btn btn-default pull-right" href="/activities">
+                <i class="glyphicon glyphicon-calendar"></i> activities view
+            </a>
+        </div>
+    </div>
+	<div class="row-clearfix">
+    	<div id="calendar"></div>
+	</div>
+
+    <script type="text/javascript">
+       $(document).ready(function() {
+
+            // page is now ready, initialize the calendar...
+        
+            $('#calendar').fullCalendar({
+                // put your options and callbacks here
+				header: {
+    				left: 'prev,next today',
+    				center: 'title',
+    				right: 'month,agendaWeek,agendaDay,listWeek'
+    			},
+                events: '/calendar_json'
+            })
+        
+        }); 
+    </script>
+  </div>
+</html>
